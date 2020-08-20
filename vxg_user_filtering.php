@@ -16,31 +16,41 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once $CFG->dirroot . '/user/filters/lib.php';
-require_once __DIR__ . '/search_boss.php';
-require_once __DIR__ . '/search_org_job.php';
-require_once __DIR__ . '/orgadmin_check.php';
+require_once($CFG->dirroot . '/user/filters/lib.php');
+require_once(__DIR__ . '/search_boss.php');
+require_once(__DIR__ . '/search_org_job.php');
+require_once(__DIR__ . '/orgadmin_check.php');
 
-class vxg_user_filtering extends user_filtering
-{
+class vxg_user_filtering extends user_filtering {
 
-    public function get_field($fieldname, $advanced)
-    {
+    public function get_field($fieldname, $advanced) {
         global $USER, $CFG, $DB, $SITE;
 
         switch ($fieldname) {
-            case 'username':return new user_filter_text('username', get_string('username'), $advanced, 'username');
-            case 'realname':return new user_filter_text('realname', get_string('fullnameuser'), $advanced, $DB->sql_fullname());
-            case 'lastname':return new user_filter_text('lastname', get_string('lastname'), $advanced, 'lastname');
-            case 'firstname':return new user_filter_text('firstname', get_string('firstname'), $advanced, 'firstname');
-            case 'email':return new user_filter_text('email', get_string('email'), $advanced, 'email');
-            case 'suspended':return new user_filter_yesno('suspended', get_string('suspended', 'auth'), $advanced, 'suspended');
-            case 'courserole':return new user_filter_courserole('courserole', get_string('courserole', 'filters'), $advanced);
-            case 'systemrole':return new user_filter_globalrole('systemrole', get_string('globalrole', 'role'), $advanced);
-            case 'firstaccess':return new user_filter_date('firstaccess', get_string('firstaccess', 'filters'), $advanced, 'firstaccess');
-            case 'lastaccess':return new user_filter_date('lastaccess', get_string('lastaccess'), $advanced, 'lastaccess');
-            case 'timemodified':return new user_filter_date('timemodified', get_string('lastmodified'), $advanced, 'timemodified');
-            case 'idnumber':return new user_filter_text('idnumber', get_string('idnumber'), $advanced, 'idnumber');
+            case 'username':
+                return new user_filter_text('username', get_string('username'), $advanced, 'username');
+            case 'realname':
+                return new user_filter_text('realname', get_string('fullnameuser'), $advanced, $DB->sql_fullname());
+            case 'lastname':
+                return new user_filter_text('lastname', get_string('lastname'), $advanced, 'lastname');
+            case 'firstname':
+                return new user_filter_text('firstname', get_string('firstname'), $advanced, 'firstname');
+            case 'email':
+                return new user_filter_text('email', get_string('email'), $advanced, 'email');
+            case 'suspended':
+                return new user_filter_yesno('suspended', get_string('suspended', 'auth'), $advanced, 'suspended');
+            case 'courserole':
+                return new user_filter_courserole('courserole', get_string('courserole', 'filters'), $advanced);
+            case 'systemrole':
+                return new user_filter_globalrole('systemrole', get_string('globalrole', 'role'), $advanced);
+            case 'firstaccess':
+                return new user_filter_date('firstaccess', get_string('firstaccess', 'filters'), $advanced, 'firstaccess');
+            case 'lastaccess':
+                return new user_filter_date('lastaccess', get_string('lastaccess'), $advanced, 'lastaccess');
+            case 'timemodified':
+                return new user_filter_date('timemodified', get_string('lastmodified'), $advanced, 'timemodified');
+            case 'idnumber':
+                return new user_filter_text('idnumber', get_string('idnumber'), $advanced, 'idnumber');
             case 'org':
                 if ($DB->get_manager()->table_exists('vxg_user_pos')) {
                     return new user_filter_search_org_job('org', get_string('org', 'block_vxg_orgs'), $advanced, 'org');
@@ -59,8 +69,8 @@ class vxg_user_filtering extends user_filtering
                 } else {
                     return null;
                 }
-            case 'orgadmin':return new user_filter_orgadmin_check('boss', get_string('onlyorgadmin', 'block_vxg_orgs'), $advanced, 'orgadmin');
-
+            case 'orgadmin':
+                return new user_filter_orgadmin_check('boss', get_string('onlyorgadmin', 'block_vxg_orgs'), $advanced, 'orgadmin');
             default:
                 return null;
         }

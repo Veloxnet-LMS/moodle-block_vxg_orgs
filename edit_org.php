@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once '../../config.php';
-require_once 'forms.php';
+require_once('../../config.php');
+require_once($CFG->dirroot . '/repository/lib.php');
 
 global $DB, $OUTPUT, $PAGE, $USER;
 
@@ -30,17 +30,17 @@ if (empty($returnurl)) {
     $returnurl = new moodle_url('/my');
 }
 
-$title_string   = get_string('edit_org_title', 'block_vxg_orgs');
-$heading_string = get_string('edit_org_heading', 'block_vxg_orgs');
+$titlestring   = get_string('edit_org_title', 'block_vxg_orgs');
+$headingstring = get_string('edit_org_heading', 'block_vxg_orgs');
 
 $PAGE->set_context($context);
 $PAGE->set_url('/blocks/vxg_orgs/edit_org.php', array('orgid' => $orgid));
 $PAGE->set_pagelayout('incourse');
-$PAGE->set_title($title_string);
-$PAGE->set_heading($heading_string);
-$PAGE->navbar->add($heading_string);
+$PAGE->set_title($titlestring);
+$PAGE->set_heading($headingstring);
+$PAGE->navbar->add($headingstring);
 
-$org = $DB->get_record('vxg_org', array('id' => $orgid));
+$org = $DB->get_record('block_vxg_org', array('id' => $orgid));
 
 $fileoptions = array(
     'maxbytes'       => 0,
@@ -57,13 +57,13 @@ $data = file_prepare_standard_filemanager($data, 'files',
 $toform['orgid']     = $orgid;
 $toform['returnurl'] = $returnurl;
 
-$edit_orgs_form = new edit_orgs_form(null, array('toform' => $toform, 'data' => $data,
+$editorgsform = new \block_vxg_orgs\form\edit_orgs_form(null, array('toform' => $toform, 'data' => $data,
     'fileoptions'                                             => $fileoptions,
 ));
 
-if ($edit_orgs_form->is_cancelled()) {
+if ($editorgsform->is_cancelled()) {
     redirect($returnurl);
-} else if ($data = $edit_orgs_form->get_data()) {
+} else if ($data = $editorgsform->get_data()) {
 
     $filedata = file_postupdate_standard_filemanager($data, 'files',
         $fileoptions, $context, 'block_vxg_orgs_' . $orgid, 'files', 0);
@@ -92,7 +92,7 @@ if ($edit_orgs_form->is_cancelled()) {
     $org->costcenterid  = $data->costcenterid;
     $org->timemodified  = date("Y/m/d/H/m/s");
     $org->usermodified  = $USER->id;
-    $DB->update_record('vxg_org', $org);
+    $DB->update_record('block_vxg_org', $org);
 
     redirect($returnurl);
 } else {
@@ -100,7 +100,7 @@ if ($edit_orgs_form->is_cancelled()) {
     $site = get_site();
     echo $OUTPUT->header();
 
-    $edit_orgs_form->set_data(array(
+    $editorgsform->set_data(array(
         'idnumber'      => $org->idnumber,
         'fullname'      => $org->fullname,
         'secondaryname' => $org->secondaryname,
@@ -115,23 +115,23 @@ if ($edit_orgs_form->is_cancelled()) {
     $addurl = new moodle_url('/blocks/vxg_orgs/add_org.php', array('returnurl' => $returnurl,
         'orgid'                                                                    => $org->id));
 
-    $add_btn = html_writer::link($addurl,
+    $addbtn = html_writer::link($addurl,
         html_writer::tag('button', get_string('add_org', 'block_vxg_orgs'),
             array('class' => 'btn btn-primary')));
 
     $delurl = new moodle_url('/blocks/vxg_orgs/delete_org.php', array('returnurl' => $returnurl,
         'orgid'                                                                       => $org->id));
 
-    $del_btn = html_writer::link($delurl,
+    $delbtn = html_writer::link($delurl,
         html_writer::tag('button', get_string('del_org', 'block_vxg_orgs'),
             array('class' => 'btn btn-danger')));
 
-    echo $add_btn;
+    echo $addbtn;
     echo ' ';
-    echo $del_btn;
+    echo $delbtn;
 
     echo '<hr>';
-    $edit_orgs_form->display();
+    $editorgsform->display();
     echo $OUTPUT->footer();
 
 }

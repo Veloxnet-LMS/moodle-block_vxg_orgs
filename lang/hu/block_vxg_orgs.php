@@ -19,6 +19,7 @@ $string['vxg_orgs:myaddinstance'] = 'VXG Szervezeti blokk hozzáadása az LMS-he
 $string['vxg_orgs:caneditorgs'] = 'Szervezetek módosítása';
 $string['vxg_orgs:canvieworgs'] = 'Szervezetek megtekintése';
 $string['vxg_orgs:manageorgadmins'] = 'Szervezeti adminisztrátorok kezelése';
+$string['privacy:metadata'] = 'A Szervezeti plugin nem tárol személyes adatokat.';
 $string['pluginname'] = 'Szervezetek';
 
 $string['edit_org_title'] = 'Szervezet módosítása';
@@ -41,13 +42,11 @@ $string['file'] = 'Fájlok';
 $string['add_org_title'] = 'Szervezet hozzáadása';
 $string['add_org_heading'] = 'Szervezet hozzáadása';
 $string['add_org'] = 'Új Szervezet hozzáadása';
-$string['delete_feedback'] =  'Biztos benne hogy törli a(z) {$a->org_name} nevű Szervezetet?<br>
-Ha vannak alszervezetei, akkor azok is törlődni fognak!<br>
-Ennek a Szervezetnek {$a->org_childs} alszervezete van.';
+$string['delete_feedback'] = 'Biztos benne hogy törli a(z) {$a->org_name} nevű Szervezetet?<br> Ha vannak alszervezetei, akkor azok is törlődni fognak!<br> Ennek a Szervezetnek {$a->org_childs} alszervezete van.';
 $string['canadd'] = 'Felhasználók ezzekkel a szerepkörökkel adhatják hozzá ezt blokkot egy oldalra';
 $string['canaddroles'] = 'Szerepkörök';
 
-// org admins
+// Org admins.
 $string['remove_org_admin'] = 'Felhasználó eltávolítása';
 $string['add_org_admin'] = 'Felhasználó hozzádasa';
 $string['manage_org_admins'] = 'A(z) {$a} szervezet adminisztrátorok kezelése';

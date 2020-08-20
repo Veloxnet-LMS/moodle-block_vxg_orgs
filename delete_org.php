@@ -15,7 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once('../../config.php');
-require_once('forms.php');
 require_once('lib.php');
 
 global $DB, $OUTPUT, $PAGE;
@@ -31,37 +30,37 @@ if (empty($returnurl)) {
     $returnurl = new moodle_url('/my');
 }
 
-$title_string   = get_string('del_org', 'block_vxg_orgs');
-$heading_string = get_string('del_org', 'block_vxg_orgs');
+$titlestring   = get_string('del_org', 'block_vxg_orgs');
+$headingstring = get_string('del_org', 'block_vxg_orgs');
 
 $PAGE->set_context($context);
 $PAGE->set_url('/blocks/vxg_orgs/edit_org.php', array('orgid' => $orgid));
 $PAGE->set_pagelayout('incourse');
-$PAGE->set_title($title_string);
-$PAGE->navbar->add($heading_string);
-$PAGE->set_heading($heading_string);
+$PAGE->set_title($titlestring);
+$PAGE->navbar->add($headingstring);
+$PAGE->set_heading($headingstring);
 
-$org = $DB->get_record('vxg_org', array('id' => $orgid));
+$org = $DB->get_record('block_vxg_org', array('id' => $orgid));
 
-$org_childs = $DB->count_records('vxg_org', ['parentid' => $org->id]);
-$orgdata    = (object) array('org_childs' => $org_childs, 'org_name' => $org->fullname);
+$orgchilds = $DB->count_records('block_vxg_org', ['parentid' => $org->id]);
+$orgdata    = (object) array('org_childs' => $orgchilds, 'org_name' => $org->fullname);
 
-$delete_orgs_form = new delete_orgs_form(null, array('orgdata' => $orgdata,
+$deleteorgsform = new \block_vxg_orgs\form\delete_orgs_form(null, array('orgdata' => $orgdata,
     'returnurl'                                                    => $returnurl));
 
 $toform['orgid'] = $orgid;
-$delete_orgs_form->set_data($toform);
+$deleteorgsform->set_data($toform);
 
-if ($delete_orgs_form->is_cancelled()) {
+if ($deleteorgsform->is_cancelled()) {
     redirect($returnurl);
-} else if ($data = $delete_orgs_form->get_data()) {
+} else if ($data = $deleteorgsform->get_data()) {
     delete_org_with_children($orgid);
     redirect($returnurl);
 } else {
     $site = get_site();
     echo $OUTPUT->header();
     echo $OUTPUT->box_start('generalbox boxaligncenter boxwidthwide');
-    $delete_orgs_form->display();
+    $deleteorgsform->display();
     echo $OUTPUT->box_end();
     echo $OUTPUT->footer();
 }

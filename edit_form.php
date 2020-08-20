@@ -27,8 +27,5 @@ class block_vxg_orgs_edit_form extends block_edit_form {
 
         $mform->addElement('advcheckbox', 'config_show_deleted', get_string('show_deleted', 'block_vxg_orgs'));
 
-
-
-
     }
 }

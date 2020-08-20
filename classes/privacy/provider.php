@@ -14,12 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
+namespace block_vxg_orgs\privacy;
 
-function xmldb_block_vxg_orgs_install()
-{
-    global $CFG, $DB;
-    if (!$DB->get_manager()->table_exists('vxg_right')) {
-        $DB->get_manager()->install_from_xmldb_file(core_component::get_plugin_list('block')['vxg_orgs'] . '/db/vxg_right.xml');
+class provider implements
+    // This plugin does not store any personal user data.
+    \core_privacy\local\metadata\null_provider {
+
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    public static function get_reason() : string {
+        return 'privacy:metadata';
     }
 }

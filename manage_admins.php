@@ -30,13 +30,13 @@ $addorgadmin    = optional_param('addorgadmin', 0, PARAM_INT);
 $sort    = optional_param('sort', 'name', PARAM_ALPHANUM);
 $dir     = optional_param('dir', 'ASC', PARAM_ALPHA);
 $page    = optional_param('page', 0, PARAM_INT);
-$perpage = optional_param('perpage', 30, PARAM_INT); // how many per page
+$perpage = optional_param('perpage', 30, PARAM_INT); // Wow many per page.
 
 require_login();
 $context = context_system::instance();
 
 require_capability('block/vxg_orgs:manageorgadmins', $context);
-if (!$DB->record_exists('vxg_org', array('id' => $orgid))) {
+if (!$DB->record_exists('block_vxg_org', array('id' => $orgid))) {
     print_error('orgnotexist', 'block_vxg_orgs');
 }
 
@@ -45,7 +45,7 @@ if (empty($returnurl)) {
 }
 $orgname = '';
 
-$orgname = $DB->get_field('vxg_org', 'fullname', array('id' => $orgid));
+$orgname = $DB->get_field('block_vxg_org', 'fullname', array('id' => $orgid));
 $head    = get_string('manage_org_admins', 'block_vxg_orgs', $orgname);
 
 $PAGE->set_context($context);
@@ -57,22 +57,28 @@ $PAGE->navbar->add($head);
 
 if ($removeorgadmin && confirm_sesskey()) {
     require_capability('block/vxg_orgs:manageorgadmins', $context);
-    if ($DB->record_exists('vxg_right', array('objecttype' => 'org', 'objectid' => $orgid, 'userid' => $removeorgadmin))) {
-        $DB->delete_records('vxg_right', array('objecttype' => 'org', 'objectid' => $orgid, 'userid' => $removeorgadmin));
+    if ($DB->record_exists('block_vxg_org_right',
+    array('objecttype' => 'org', 'objectid' => $orgid, 'userid' => $removeorgadmin))) {
+        $DB->delete_records('block_vxg_org_right',
+        array('objecttype' => 'org', 'objectid' => $orgid, 'userid' => $removeorgadmin));
     }
 } else if ($addorgadmin && confirm_sesskey()) {
     require_capability('block/vxg_orgs:manageorgadmins', $context);
-    if (!$DB->record_exists('vxg_right', array('objecttype' => 'org', 'objectid' => $orgid, 'userid' => $addorgadmin))) {
-        $DB->insert_record('vxg_right', (object) array('objecttype' => 'org', 'objectid' => $orgid, 'userid' => $addorgadmin));
+    if (!$DB->record_exists('block_vxg_org_right', array('objecttype' => 'org', 'objectid' => $orgid, 'userid' => $addorgadmin))) {
+        $DB->insert_record('block_vxg_org_right',
+        (object) array('objecttype' => 'org', 'objectid' => $orgid, 'userid' => $addorgadmin));
     }
 }
 
-$fieldnames = array('realname' => 0, 'orgadmin'    => 0, 'org'        => 1, 'job' => 1, 'boss' => 1, 'lastname' => 1, 'firstname' => 1, 'username' => 1, 'email' => 1, 'idnumber' => 1, 'suspended' => 1, 'courserole' => 1,
+$fieldnames = array('realname' => 0, 'orgadmin'    => 0, 'org'        => 1, 'job' => 1, 'boss' => 1, 'lastname' => 1,
+'firstname' => 1, 'username' => 1, 'email' => 1, 'idnumber' => 1, 'suspended' => 1, 'courserole' => 1,
     'systemrole'                   => 1, 'firstaccess' => 1, 'lastaccess' => 1,
     'timemodified'                 => 1);
 
-// create the user filter form
-$ufiltering = new vxg_user_filtering($fieldnames, "manage_admins.php?orgid=$orgid&amp;sort=$sort&amp;dir=$dir&amp;returnurl=$returnurl", array('orgid' => $orgid));
+// Create the user filter form.
+$ufiltering = new vxg_user_filtering($fieldnames,
+"manage_admins.php?orgid=$orgid&amp;sort=$sort&amp;dir=$dir&amp;returnurl=$returnurl", array('orgid' => $orgid));
+
 echo $OUTPUT->header();
 
 // These columns are always shown in the users list.
@@ -81,7 +87,7 @@ $requiredcolumns = array('idnumber');
 $extracolumns = get_extra_user_fields($context, $requiredcolumns);
 // Get all user name fields as an array.
 $allusernamefields = get_all_user_name_fields(false, null, null, null, true);
-// Add vxg columns
+// Add vxg columns.
 $vxgcolumns = array('job', 'org', 'boss');
 $columns    = array_merge($allusernamefields, $extracolumns, $requiredcolumns);
 
@@ -103,10 +109,9 @@ foreach ($columns as $column) {
         }
         $columnicon = $OUTPUT->pix_icon('t/' . $columnicon, get_string(strtolower($columndir)), 'core',
             ['class' => 'iconsort']);
-
     }
-    $$column = "<a href=\"manage_admins.php?orgid=$orgid&amp;sort=$column&amp;dir=$columndir&amp;returnurl=$returnurl\">" . $string[$column] . "</a>$columnicon";
-    // $$column = new moodle_url(/'blocks/vxg_orgs')
+    $$column = "<a href=\"manage_admins.php?orgid=$orgid&amp;sort=$column&amp;dir=$columndir&amp;returnurl=$returnurl\">" .
+    $string[$column] . "</a>$columnicon";
 }
 
 foreach ($vxgcolumns as $column) {
@@ -158,7 +163,8 @@ if ($extrasql !== '') {
 
 $strall = get_string('all');
 
-$baseurl = new moodle_url('/blocks/vxg_orgs/manage_admins.php', array('orgid' => $orgid, 'sort' => $sort, 'dir' => $dir, 'perpage' => $perpage, 'returnurl' => $returnurl));
+$baseurl = new moodle_url('/blocks/vxg_orgs/manage_admins.php',
+array('orgid' => $orgid, 'sort' => $sort, 'dir' => $dir, 'perpage' => $perpage, 'returnurl' => $returnurl));
 echo $OUTPUT->paging_bar($usercount, $page, $perpage, $baseurl);
 
 flush();
@@ -196,28 +202,31 @@ if (!$users) {
         $bosses    = block_vxg_orgs_get_user_boss_names($positions);
 
         $buttons = array();
-        if ($DB->record_exists('vxg_right', array('objecttype' => 'org', 'objectid' => $orgid, 'userid' => $user->id))) {
+        if ($DB->record_exists('block_vxg_org_right', array('objecttype' => 'org', 'objectid' => $orgid, 'userid' => $user->id))) {
             $removeorgadmin = new moodle_url('/blocks/vxg_orgs/manage_admins.php',
                 array('orgid' => $orgid, 'removeorgadmin' => $user->id, 'returnurl' => $returnurl, 'sesskey' => sesskey()));
-            $buttons[] = html_writer::link($removeorgadmin, $OUTPUT->pix_icon('t/removecontact', get_string('remove_org_admin', 'block_vxg_orgs'), 'moodle', array('class' => 'text-danger')));
+            $buttons[] = html_writer::link($removeorgadmin, $OUTPUT->pix_icon('t/removecontact',
+            get_string('remove_org_admin', 'block_vxg_orgs'), 'moodle', array('class' => 'text-danger')));
         } else {
             $addorgadmin = new moodle_url('/blocks/vxg_orgs/manage_admins.php',
                 array('orgid' => $orgid, 'addorgadmin' => $user->id, 'returnurl' => $returnurl, 'sesskey' => sesskey()));
-            $buttons[] = html_writer::link($addorgadmin, $OUTPUT->pix_icon('i/assignroles', get_string('add_org_admin', 'block_vxg_orgs'), 'moodle', array('class' => 'text-primary')));
+            $buttons[] = html_writer::link($addorgadmin, $OUTPUT->pix_icon('i/assignroles',
+             get_string('add_org_admin', 'block_vxg_orgs'), 'moodle', array('class' => 'text-primary')));
         }
 
         $fullname = fullname($user, true);
-        // Get extra data for picture
+        // Get extra data for picture.
         $user->picture  = $DB->get_record('user', array('id' => $user->id), 'picture')->picture;
         $user->imagealt = $DB->get_record('user', array('id' => $user->id), 'imagealt')->imagealt;
 
-        // Get the picture
+        // Get the picture.
         $userpicture    = new \user_picture($user);
         $userpictureurl = $userpicture->get_url($PAGE)->out(false);
 
-        // Make the link and a tag for a picture
+        // Make the link and a tag for a picture.
         $userprofileurl = new moodle_url('/user/profile.php', array('id' => $user->id));
-        $profilepic     = html_writer::tag('img', '', array('src' => $userpictureurl, 'style' => 'margin-right:5px;border-radius:12px;'));
+        $profilepic     = html_writer::tag('img', '',
+        array('src' => $userpictureurl, 'style' => 'margin-right:5px;border-radius:12px;'));
 
         $row            = array();
         $userprofileurl = new moodle_url('/user/profile.php', array('id' => $user->id));
@@ -236,7 +245,7 @@ if (!$users) {
         $table->data[] = $row;
     }
 }
-// add filters
+// Add filters.
 $ufiltering->display_add();
 $ufiltering->display_active();
 

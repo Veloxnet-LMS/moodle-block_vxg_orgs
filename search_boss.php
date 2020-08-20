@@ -16,25 +16,15 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once $CFG->dirroot . '/user/filters/lib.php';
+require_once($CFG->dirroot . '/user/filters/lib.php');
 
-class user_filter_search_boss extends user_filter_type
-{
+class user_filter_search_boss extends user_filter_type {
 
-    public function __construct($name, $label, $advanced)
-    {
-        parent::__construct($name, $label, $advanced);
+    public function get_operators() {
+        return array(1 => get_string('isanyvalue', 'filters'));
     }
 
-    public function get_operators()
-    {
-        return array(1 => get_string('isanyvalue', 'filters'),
-            // 2              => get_string('isequalto', 'filters')
-        );
-    }
-
-    public function setupForm(&$mform)
-    {
+    public function setupform(&$mform) {
         $name = $this->_name;
 
         $objs           = array();
@@ -52,8 +42,7 @@ class user_filter_search_boss extends user_filter_type
         }
     }
 
-    public function get_sql_filter($data)
-    {
+    public function get_sql_filter($data) {
         global $DB;
 
         if ($data['operator'] == 1) {
@@ -77,24 +66,20 @@ class user_filter_search_boss extends user_filter_type
                 $posids[] = $child->id;
             }
 
-
-            // if no positon found means no user has this position assign either
-            $where_list = implode(" $operator up.posid = ", $posids);
+            // If no positon found means no user has this position assign either.
+            $wherelist = implode(" $operator up.posid = ", $posids);
         } else {
-            $where_list = 0;
+            $wherelist = 0;
         }
 
         $sql = "id IN (SELECT userid
         FROM {vxg_user_pos} up
-        WHERE up.posid = $where_list)";
-
-
+        WHERE up.posid = $wherelist)";
 
         return array($sql, array());
     }
 
-    public function check_data($formdata)
-    {
+    public function check_data($formdata) {
 
         $field    = $this->_name . '_s';
         $operator = $this->_name . '_op';
@@ -105,14 +90,12 @@ class user_filter_search_boss extends user_filter_type
             if (isset($formdata->$field) and !empty($formdata->$field)) {
                 $fieldvalue = $formdata->$field;
             }
-            // return false;
             return array('operator' => (int) $formdata->$operator, 'value' => $fieldvalue);
         }
         return false;
     }
 
-    public function get_label($data)
-    {
+    public function get_label($data) {
         global $DB;
         $operators = $this->get_operators();
         $operator  = $data['operator'];
@@ -131,10 +114,10 @@ class user_filter_search_boss extends user_filter_type
         $a        = new stdClass();
         $a->label = $this->_label;
 
-            foreach ($items as $item) {
-                $itemsarray[] = $item->fullname;
-            }
-            $items = implode(', ', $itemsarray);
+        foreach ($items as $item) {
+            $itemsarray[] = $item->fullname;
+        }
+        $items = implode(', ', $itemsarray);
 
         $a->value    = '"' . $items . '"';
         $a->operator = $operators[$operator];

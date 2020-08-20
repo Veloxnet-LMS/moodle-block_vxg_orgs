@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once '../../config.php';
-require_once 'forms.php';
+require_once('../../config.php');
+require_once($CFG->dirroot . '/repository/lib.php');
 
 global $DB, $OUTPUT, $PAGE;
 
@@ -30,15 +30,15 @@ if (empty($returnurl)) {
     $returnurl = new moodle_url('/my');
 }
 
-$title_string   =  get_string('add_org_title', 'block_vxg_orgs');
-$heading_string =  get_string('add_org_heading', 'block_vxg_orgs');
+$titlestring   = get_string('add_org_title', 'block_vxg_orgs');
+$headingstring = get_string('add_org_heading', 'block_vxg_orgs');
 
 $PAGE->set_context($context);
 $PAGE->set_url('/blocks/vxg_orgs/add_org.php', array('orgid' => $orgid));
 $PAGE->set_pagelayout('incourse');
-$PAGE->set_title($title_string);
-$PAGE->set_heading($heading_string);
-$PAGE->navbar->add($heading_string);
+$PAGE->set_title($titlestring);
+$PAGE->set_heading($headingstring);
+$PAGE->navbar->add($headingstring);
 
 $fileoptions = array(
     'maxbytes' => 0,
@@ -52,29 +52,29 @@ $toform['orgid'] = $orgid;
 $toform['returnurl'] = $returnurl;
 
 $data = null;
-$edit_orgs_form = new edit_orgs_form(null, array('toform' => $toform, 'data' => $data,
+$editorgsform = new \block_vxg_orgs\form\edit_orgs_form(null, array('toform' => $toform, 'data' => $data,
     'fileoptions' => $fileoptions,
 ));
 
-if($edit_orgs_form->is_cancelled()) {
+if ($editorgsform->is_cancelled()) {
     redirect($returnurl);
-} else if ($data = $edit_orgs_form->get_data()) {
+} else if ($data = $editorgsform->get_data()) {
 
     if ($data->validfrom == 0) {
-        $validfrom = NULL;
-    }else{
+        $validfrom = null;
+    } else {
         $validfrom = date('Y-m-d', $data->validfrom);
     }
 
     if ($data->validto == 0) {
-        $validto = NULL;
-    }else{
+        $validto = null;
+    } else {
         $validto = date('Y-m-d', $data->validto);
     }
 
-    if($orgid != 0){
+    if ($orgid != 0) {
 
-        $parent_org = $DB->get_record('vxg_org', array('id' => $orgid), 'id, level, path');
+        $parentorg = $DB->get_record('block_vxg_org', array('id' => $orgid), 'id, level, path');
 
         $org = new stdClass();
         $org->idnumber = $data->idnumber;
@@ -86,18 +86,18 @@ if($edit_orgs_form->is_cancelled()) {
         $org->orgtype = $data->orgtype;
         $org->costcenterid = $data->costcenterid;
 
-        $org->parentid = $parent_org->id;
-        $org->level = $parent_org->level+1;
+        $org->parentid = $parentorg->id;
+        $org->level = $parentorg->level + 1;
         $org->usermodified = $USER->id;
         $org->timecreated = date("Y/m/d/H/m/s");
 
-        $inserted_id = $DB->insert_record('vxg_org', $org);
+        $insertedid = $DB->insert_record('block_vxg_org', $org);
 
-        $update_org = new stdClass();
-        $update_org->id = $inserted_id;
-        $update_org->path = $parent_org->path .'/' . $inserted_id;
+        $updateorg = new stdClass();
+        $updateorg->id = $insertedid;
+        $updateorg->path = $parentorg->path .'/' . $insertedid;
 
-        $DB->update_record('vxg_org', $update_org);
+        $DB->update_record('block_vxg_org', $updateorg);
     } else {
         $org = new stdClass();
         $org->idnumber = $data->idnumber;
@@ -108,26 +108,26 @@ if($edit_orgs_form->is_cancelled()) {
         $org->validto = $validto;
         $org->orgtype = $data->orgtype;
         $org->costcenterid = $data->costcenterid;
-    
+
         $org->parentid = 0;
         $org->level = 1;
         $org->usermodified = $USER->id;
         $org->timecreated = date("Y/m/d/h/m/s");
 
-        $inserted_id = $DB->insert_record('vxg_org', $org);
+        $insertedid = $DB->insert_record('block_vxg_org', $org);
 
-        $update_org = new stdClass();
-        $update_org->id = $inserted_id;
-        $update_org->path = '/' . $inserted_id;
+        $updateorg = new stdClass();
+        $updateorg->id = $insertedid;
+        $updateorg->path = '/' . $insertedid;
 
-        $DB->update_record('vxg_org', $update_org);
+        $DB->update_record('block_vxg_org', $updateorg);
     }
     $filedata = file_postupdate_standard_filemanager($data, 'files',
-            $fileoptions, $context, 'block_vxg_orgs_'. $inserted_id, 'files', 0);
+            $fileoptions, $context, 'block_vxg_orgs_'. $insertedid, 'files', 0);
     redirect($returnurl);
 } else {
     $site = get_site();
     echo $OUTPUT->header();
-    $edit_orgs_form->display();
+    $editorgsform->display();
     echo $OUTPUT->footer();
 }

@@ -14,22 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace block_vxg_orgs\form;
+
 defined('MOODLE_INTERNAL') || die();
 
-require_once $CFG->libdir . '/formslib.php';
+require_once($CFG->libdir . '/formslib.php');
 
-class edit_orgs_form extends moodleform
-{
+class edit_orgs_form extends \moodleform {
 
-    public function definition()
-    {
+    public function definition() {
         global $CFG;
 
         $mform = $this->_form;
-        
-        $data = $this->_customdata['data'];
+
+        $data        = $this->_customdata['data'];
         $fileoptions = $this->_customdata['fileoptions'];
-        $toform = $this->_customdata['toform'];
+        $toform      = $this->_customdata['toform'];
 
         $mform->addElement('text', 'idnumber', get_string('idnumber', 'block_vxg_orgs'), array('style' => 'width:100%'));
         $mform->setType('idnumber', PARAM_RAW);
@@ -56,10 +56,8 @@ class edit_orgs_form extends moodleform
         $mform->addRule('costcenterid', null, 'numeric', null, 'client');
 
         $mform->addElement('filemanager', 'files_filemanager', get_string('file', 'block_vxg_orgs'), null,
-        $fileoptions);
+            $fileoptions);
 
-
-        
         $mform->addElement('hidden', 'orgid', $toform['orgid']);
         $mform->setType('orgid', PARAM_INT);
         $mform->addElement('hidden', 'returnurl', $toform['returnurl']);
@@ -68,53 +66,5 @@ class edit_orgs_form extends moodleform
         $this->add_action_buttons();
 
         $this->set_data($data);
-
     }
-
-}
-
-
-class delete_orgs_form extends moodleform
-{
-
-    public function definition()
-    {
-        global $CFG;
-
-        $mform = $this->_form;
-
-        $orgdata = $this->_customdata['orgdata'];
-        $returnurl = $this->_customdata['returnurl'];
-
-        $mform->addElement('static', 'delete_feedback', get_string('delete_feedback', 'block_vxg_orgs', $orgdata));
-
-        $mform->addElement('hidden', 'orgid', '0');
-        $mform->setType('orgid', PARAM_INT);
-        $mform->addElement('hidden', 'returnurl', $returnurl);
-        $mform->setType('returnurl', PARAM_LOCALURL);
-
-        $this->add_action_buttons(true, get_string('del_org', 'block_vxg_orgs'));
-
-    }
-
-}
-
-class search_orgs_autocomplete extends moodleform
-{
-
-    public function definition()
-    {
-        global $CFG;
-
-        $mform = $this->_form;
-
-        $options = array('ajax' => 'block_vxg_orgs/auto_orgs');
-
-        $mform->addElement('autocomplete', 'orgs', '', array(), $options);
-        $mform->setType('indicators', 'orgs');
-
-        $mform->disable_form_change_checker();
-
-    }
-
 }

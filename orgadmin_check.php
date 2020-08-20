@@ -16,7 +16,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once $CFG->dirroot . '/user/filters/checkbox.php';
+require_once($CFG->dirroot . '/user/filters/checkbox.php');
 
 class user_filter_orgadmin_check extends user_filter_checkbox
 {
@@ -43,7 +43,7 @@ class user_filter_orgadmin_check extends user_filter_checkbox
         return false;
     }
 
-        /**
+    /**
      * Returns the condition to be used with SQL where
      *
      * @param array $data filter settings
@@ -53,7 +53,7 @@ class user_filter_orgadmin_check extends user_filter_checkbox
         $field  = $this->field;
 
         $sql = "id IN (SELECT userid
-        FROM {vxg_right} r
+        FROM {block_vxg_org_right} r
         WHERE r.objecttype = 'org' AND objectid = $data[orgid])";
 
         return array($sql, array());

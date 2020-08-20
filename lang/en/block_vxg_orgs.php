@@ -19,6 +19,7 @@ $string['vxg_orgs:myaddinstance'] = 'Add VXG Organizations block to my LMS';
 $string['vxg_orgs:caneditorgs'] = 'Edit organizations';
 $string['vxg_orgs:canvieworgs'] = 'View organizations';
 $string['vxg_orgs:manageorgadmins'] = 'Manage organizations admins';
+$string['privacy:metadata'] = 'The Orgs plugin does not store any personal data.';
 $string['pluginname'] = 'Organizations';
 
 $string['edit_org_title'] = 'Edit organization';
@@ -41,15 +42,13 @@ $string['file'] = 'Files';
 $string['add_org_title'] = 'Adding Organization';
 $string['add_org_heading'] = 'Adding Organization';
 $string['add_org'] = 'Add Organization';
-$string['delete_feedback'] = 'Are you sure you want to delete the {$a->org_name} org?<br>
-                              If it has children they will be deleted too!<br>
-                              It has {$a->org_childs} child(ren).';
+$string['delete_feedback'] = 'Are you sure you want to delete the {$a->org_name} org?<br> If it has children they will be deleted too!<br> It has {$a->org_childs} child(ren).';
 
-// settings
+// Settings.
 $string['canadd'] = 'Users with these roles can add this block to a page';
 $string['canaddroles'] = 'Roles';
 
-// org admins
+// Org admins.
 $string['remove_org_admin'] = 'Remove user';
 $string['add_org_admin'] = 'Add user';
 $string['manage_org_admins'] = 'Manage the {$a} organization admins';

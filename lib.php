@@ -16,29 +16,25 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once $CFG->libdir . '/completionlib.php';
+require_once($CFG->libdir . '/completionlib.php');
 
-function delete_org_with_children($orgid){
+function delete_org_with_children($orgid) {
     global $DB;
 
-    $childs = $DB->get_records('vxg_org', ['parentid' => $orgid], 'id');
+    $childs = $DB->get_records('block_vxg_org', ['parentid' => $orgid], 'id');
 
     foreach ($childs as $child) {
         $child->deleted = date("Y/m/d/H/m/s");
         delete_org_with_children($child->id);
-        $DB->update_record('vxg_org', $child);
-        
+        $DB->update_record('block_vxg_org', $child);
+
     }
 
-    $DB->update_record('vxg_org', ['id' => $orgid, 'deleted' => date("Y/m/d/H/m/s")]);
+    $DB->update_record('block_vxg_org', ['id' => $orgid, 'deleted' => date("Y/m/d/H/m/s")]);
 }
 
 
 function block_vxg_orgs_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
-
-    // if ($context->contextlevel != CONTEXT_SYSTEM) {
-    //     send_file_not_found();
-    // }
 
     $fs = get_file_storage();
     $file = $fs->get_file($context->id, 'vxg_orgs', $filearea, $args[0], '/', $args[1]);

@@ -16,24 +16,21 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-class block_vxg_orgs extends block_base
-{
+class block_vxg_orgs extends block_base {
 
     protected $contentgenerated = false;
 
     protected $docked = null;
 
-    public function init()
-    {
+    public function init() {
         $this->title = get_string('pluginname', 'block_vxg_orgs');
     }
 
-    public function user_can_addto($page)
-    {
+    public function user_can_addto($page) {
         global $CFG;
         require_once(__DIR__ . '/locallib.php');
 
-        if(is_siteadmin()){
+        if (is_siteadmin()) {
             return true;
         }
 
@@ -59,11 +56,9 @@ class block_vxg_orgs extends block_base
                 return true;
             }
         }
-        // return parent::user_can_addto($page);
     }
 
-    public function specialization()
-    {
+    public function specialization() {
 
         if (isset($this->config)) {
             if (empty($this->config->title)) {
@@ -74,13 +69,11 @@ class block_vxg_orgs extends block_base
         }
     }
 
-    public function instance_can_be_docked()
-    {
+    public function instance_can_be_docked() {
         return (parent::instance_can_be_docked() && (empty($this->config->enabledock) || $this->config->enabledock == 'yes'));
     }
 
-    public function get_required_javascript()
-    {
+    public function get_required_javascript() {
         parent::get_required_javascript();
         $arguments = array(
             'instanceid' => $this->instance->id,
@@ -90,8 +83,7 @@ class block_vxg_orgs extends block_base
         $this->page->requires->js_call_amd('block_vxg_orgs/edit_mode_org', 'init', $arguments);
     }
 
-    public function get_content()
-    {
+    public function get_content() {
         global $CFG, $OUTPUT, $DB, $COURSE;
 
         if ($this->contentgenerated === true) {
@@ -106,25 +98,23 @@ class block_vxg_orgs extends block_base
 
         if (isset($this->config)) {
             if (empty($this->config->show_deleted)) {
-                $show_deleted = 0;
+                $showdeleted = 0;
             } else {
-                $show_deleted = $this->config->show_deleted;
+                $showdeleted = $this->config->show_deleted;
             }
         } else {
-            $show_deleted = 0;
+            $showdeleted = 0;
         }
 
-        if ($show_deleted == 0) {
+        if ($showdeleted == 0) {
 
             $orgs = $DB->get_records_sql(
-                'SELECT `id`, `parentid`, `level`, `fullname`
-                FROM `mdl_vxg_org`
-                WHERE `deleted` IS NULL OR `deleted` = 0');
+                'SELECT id, parentid, level, fullname FROM {block_vxg_org} WHERE deleted IS NULL OR deleted = 0');
 
-        } else if ($show_deleted == 1) {
-            $orgs = $DB->get_records('vxg_org', null, '', 'id, parentid, level, fullname');
+        } else if ($showdeleted == 1) {
+            $orgs = $DB->get_records('block_vxg_org', null, '', 'id, parentid, level, fullname');
         } else {
-            $orgs = $DB->get_records('vxg_org', null, '', 'id, parentid, level, fullname');
+            $orgs = $DB->get_records('block_vxg_org', null, '', 'id, parentid, level, fullname');
         }
         if (isloggedin()) {
             $renderer            = $this->page->get_renderer('block_vxg_orgs');
@@ -135,12 +125,11 @@ class block_vxg_orgs extends block_base
         return true;
     }
 
-    public function instance_allow_multiple()
-    {
+    public function instance_allow_multiple() {
         return false;
     }
 
-    public function has_config()
-    {return true;}
-
+    public function has_config() {
+        return true;
+    }
 }

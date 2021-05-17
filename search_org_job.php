@@ -14,17 +14,38 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Organisation and job filter
+ * @package    block_vxg_orgs
+ * @copyright  Veloxnet
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/user/filters/lib.php');
 
+/**
+ * Filter based on organisations and jobs.
+ * @package    block_vxg_orgs
+ * @copyright  Veloxnet
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class user_filter_search_org_job extends user_filter_type {
 
+    /**
+     * Returns an array of comparison operators
+     * @return array of comparison operators
+     */
     public function get_operators() {
         return array(1 => get_string('isanyvalue', 'filters'),
             2              => get_string('isequalto', 'filters'));
     }
 
+    /**
+     * Adds controls specific to this filter in the form.
+     * @param object $mform a MoodleForm object to setup
+     */
     public function setupform(&$mform) {
         $name = $this->_name;
 
@@ -43,6 +64,11 @@ class user_filter_search_org_job extends user_filter_type {
         }
     }
 
+    /**
+     * Returns the condition to be used with SQL where
+     * @param array $data filter settings
+     * @return array sql string and $params
+     */
     public function get_sql_filter($data) {
         global $DB;
 
@@ -73,6 +99,11 @@ class user_filter_search_org_job extends user_filter_type {
         return array($sql, array());
     }
 
+    /**
+     * Retrieves data from the form data
+     * @param object $formdata data submited with the form
+     * @return mixed array filter data or false when filter not set
+     */
     public function check_data($formdata) {
         $field    = $this->_name . '_s';
         $operator = $this->_name . '_op';
@@ -88,6 +119,11 @@ class user_filter_search_org_job extends user_filter_type {
         return false;
     }
 
+    /**
+     * Returns a human friendly description of the filter used as label.
+     * @param array $data filter settings
+     * @return string active filter label
+     */
     public function get_label($data) {
         global $DB;
         $operators = $this->get_operators();
@@ -116,5 +152,4 @@ class user_filter_search_org_job extends user_filter_type {
 
         return get_string('selectlabel', 'filters', $a);
     }
-
 }

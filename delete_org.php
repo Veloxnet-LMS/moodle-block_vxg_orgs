@@ -14,6 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Page for deleting organisation
+ * @package    block_vxg_orgs
+ * @copyright  Veloxnet
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require_once('../../config.php');
 require_once('lib.php');
 
@@ -40,9 +47,9 @@ $PAGE->set_title($titlestring);
 $PAGE->navbar->add($headingstring);
 $PAGE->set_heading($headingstring);
 
-$org = $DB->get_record('block_vxg_org', array('id' => $orgid));
+$org = $DB->get_record('block_vxg_orgs', array('id' => $orgid));
 
-$orgchilds = $DB->count_records('block_vxg_org', ['parentid' => $org->id]);
+$orgchilds = $DB->count_records('block_vxg_orgs', ['parentid' => $org->id]);
 $orgdata    = (object) array('org_childs' => $orgchilds, 'org_name' => $org->fullname);
 
 $deleteorgsform = new \block_vxg_orgs\form\delete_orgs_form(null, array('orgdata' => $orgdata,

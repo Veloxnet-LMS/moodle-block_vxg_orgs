@@ -14,18 +14,42 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * This file contains the Organizations block.
+ * @package    block_vxg_orgs
+ * @copyright  Veloxnet
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Organisation block class
+ * @package    block_vxg_orgs
+ * @copyright  Veloxnet
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class block_vxg_orgs extends block_base {
 
+    /** @var bool A switch to indicate whether content has been generated or not. */
     protected $contentgenerated = false;
-
+    /** @var bool|null variable for checking if the block is docked */
     protected $docked = null;
 
+    /**
+     * Init.
+     */
     public function init() {
         $this->title = get_string('pluginname', 'block_vxg_orgs');
     }
 
+    /**
+     * Allows the block class to have a say in the user's ability to create new instances of this block.
+     * This function has access to the complete page object, the creation related to which is being determined.
+     *
+     * @param moodle_page $page
+     * @return boolean
+     */
     public function user_can_addto($page) {
         global $CFG;
         require_once(__DIR__ . '/locallib.php');
@@ -34,7 +58,6 @@ class block_vxg_orgs extends block_base {
             return true;
         }
 
-        $config = get_config('block_vxg_orgs');
         if (!empty($CFG->block_vxg_orgs_canadd)) {
             $userroles = block_vxg_orgs_get_user_role_names();
 
@@ -58,6 +81,11 @@ class block_vxg_orgs extends block_base {
         }
     }
 
+    /**
+     * This function is called on your subclass right after an instance is loaded
+     * Use this function to act on instance data just after it's loaded and before anything else is done
+     * For instance: if your block will have different title's depending on location (site, course, blog, etc)
+     */
     public function specialization() {
 
         if (isset($this->config)) {
@@ -69,10 +97,19 @@ class block_vxg_orgs extends block_base {
         }
     }
 
+    /**
+     * Can be overridden by the block to prevent the block from being dockable.
+     *
+     * @return bool
+     */
     public function instance_can_be_docked() {
         return (parent::instance_can_be_docked() && (empty($this->config->enabledock) || $this->config->enabledock == 'yes'));
     }
 
+    /**
+     * Allows the block to load any JS it requires into the page.
+     *
+     */
     public function get_required_javascript() {
         parent::get_required_javascript();
         $arguments = array(
@@ -83,15 +120,19 @@ class block_vxg_orgs extends block_base {
         $this->page->requires->js_call_amd('block_vxg_orgs/edit_mode_org', 'init', $arguments);
     }
 
+    /**
+     * Returns the contents.
+     *
+     * @return stdClass contents of block
+     */
     public function get_content() {
-        global $CFG, $OUTPUT, $DB, $COURSE;
+        global $DB, $COURSE;
 
         if ($this->contentgenerated === true) {
             return true;
         }
 
         $blockid  = $this->instance->id;
-        $courseid = $COURSE->id;
 
         $this->content       = new stdClass();
         $this->content->text = '';
@@ -109,12 +150,12 @@ class block_vxg_orgs extends block_base {
         if ($showdeleted == 0) {
 
             $orgs = $DB->get_records_sql(
-                'SELECT id, parentid, level, fullname FROM {block_vxg_org} WHERE deleted IS NULL OR deleted = 0');
+                'SELECT id, parentid, level, fullname FROM {block_vxg_orgs} WHERE deleted IS NULL OR deleted = 0');
 
         } else if ($showdeleted == 1) {
-            $orgs = $DB->get_records('block_vxg_org', null, '', 'id, parentid, level, fullname');
+            $orgs = $DB->get_records('block_vxg_orgs', null, '', 'id, parentid, level, fullname');
         } else {
-            $orgs = $DB->get_records('block_vxg_org', null, '', 'id, parentid, level, fullname');
+            $orgs = $DB->get_records('block_vxg_orgs', null, '', 'id, parentid, level, fullname');
         }
         if (isloggedin()) {
             $renderer            = $this->page->get_renderer('block_vxg_orgs');
@@ -125,10 +166,19 @@ class block_vxg_orgs extends block_base {
         return true;
     }
 
+    /**
+     * Allows the block to be added multiple times to a single page
+     * @return boolean
+     */
     public function instance_allow_multiple() {
         return false;
     }
 
+    /**
+     * This block does contain a configuration settings.
+     *
+     * @return boolean
+     */
     public function has_config() {
         return true;
     }

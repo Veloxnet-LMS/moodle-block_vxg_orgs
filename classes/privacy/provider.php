@@ -14,8 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+
+/**
+ * Privacy Subsystem implementation for block_vxg_org
+ * @package    block_vxg_orgs
+ * @copyright  Veloxnet
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 namespace block_vxg_orgs\privacy;
 
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Privacy Subsystem for block_activity_modules implementing null_provider.
+ * @copyright  Veloxnet
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class provider implements
     // This plugin does not store any personal user data.
     \core_privacy\local\metadata\null_provider {

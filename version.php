@@ -14,8 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Version details
+ * @package    block_vxg_orgs
+ * @copyright  Veloxnet
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2020082000;       // The current plugin version (Date: YYYYMMDDXX)
+$plugin->version   = 2021031600;       // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires  = 2017111309;       // Requires this Moodle version
 $plugin->component = 'block_vxg_orgs'; // Full name of the plugin (used for diagnostics).

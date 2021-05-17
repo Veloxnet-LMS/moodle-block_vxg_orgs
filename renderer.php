@@ -14,23 +14,43 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Block organisation renderer
+ * @package    block_vxg_orgs
+ * @copyright  Veloxnet
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
-class block_vxg_orgs_renderer extends plugin_renderer_base {
+defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Renderer for block organisation
+ * @package    block_vxg_orgs
+ * @copyright  Veloxnet
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class block_vxg_orgs_renderer extends plugin_renderer_base
+{
+
+    /**
+     * Returns the content of the organsiation tree and the controls
+     *
+     * @param array $orgs
+     * @param int $blockid
+     * @param string $returnurl
+     * @return string $content
+     */
     public function orgs_tree($orgs, $blockid, $returnurl) {
         $content = '';
 
         $sortedorgs = $this->sort_orgs($orgs);
-        $addurl      = new moodle_url('/blocks/vxg_orgs/add_orgition.php', array(
-            'returnurl' => $returnurl));
         $content .= html_writer::start_div('vxg_search_orgs', array('id' => 'vxg_search_orgs'));
         $content .= $this->output->render_from_template('block_vxg_orgs/org_autocomplete_block', array());
         $content .= html_writer::end_div();
         $content .= $this->edit_buttons($returnurl, $blockid);
         $content .= '<ul role="tree" id="orgs_tree" class="block_tree list">';
-        $content .= '<li class="contains_branch"><p role="treeitem"
-        class="tree_item branch" aria-owns="main_group" aria-expanded="true"
-        data-orgid="0"> <span>' . get_string('all_orgs', 'block_vxg_orgs') . '</span> </p>';
+        $content .= '<li class="contains_branch"><p role="treeitem" class="tree_item branch" aria-owns="main_group"
+        aria-expanded="true" data-orgid="0"> <span>' . get_string('all_orgs', 'block_vxg_orgs') . '</span> </p>';
 
         $content .= '<ul role="group" id="main_group" aria-hidden="false">';
 
@@ -43,17 +63,20 @@ class block_vxg_orgs_renderer extends plugin_renderer_base {
 
     }
 
+    /**
+     * Returns the content of the organsiation tree and the controls
+     *
+     * @param array $orgs
+     * @param int $blockid
+     * @return string $content
+     */
     protected function get_nodes_recursive($orgs, $blockid) {
         $content = '';
 
         foreach ($orgs as $org) {
-
-            $editurl = new moodle_url('/blocks/vxg_orgs/edit_org.php', array(
-                'orgid' => $org['id']));
-
             if (!empty($org['children'])) {
                 $content .=
-                '<li class="contains_branch">
+                    '<li class="contains_branch">
                 <p role="treeitem"
                 class="tree_item branch"
                 aria-owns="' . $blockid . $org['id'] . '_group"
@@ -76,20 +99,18 @@ class block_vxg_orgs_renderer extends plugin_renderer_base {
     }
 
     /**
-     *
      * Make parent child relationships
      *
      * @param array $orgs
-     * @return sorted array
+     * @return array sorted orgs
      *
      */
-
     protected function sort_orgs($orgs) {
         $itemsbyreference = array();
         // Build array of item references.
         foreach ($orgs as $key => &$item) {
-            $item                          = (array) $item;
-            $itemsbyreference[$item['id']] = &$item;
+            $item                          = (array)$item;
+            $itemsbyreference[$item['id']] =& $item;
             // Children array.
             $itemsbyreference[$item['id']]['children'] = array();
             // Empty orgs class (so that json_encode adds "orgs: {}" ).
@@ -98,7 +119,7 @@ class block_vxg_orgs_renderer extends plugin_renderer_base {
         // Set items as children of the relevant parent item.
         foreach ($orgs as $key => &$item) {
             if ($item['parentid'] && isset($itemsbyreference[$item['parentid']])) {
-                $itemsbyreference[$item['parentid']]['children'][] = &$item;
+                $itemsbyreference[$item['parentid']]['children'][] =& $item;
             }
         }
 
@@ -111,6 +132,11 @@ class block_vxg_orgs_renderer extends plugin_renderer_base {
         return $orgs;
     }
 
+    /**
+     * Returns the edit buttons
+     * @param string $returnurl
+     * @return string $buttons
+     */
     protected function edit_buttons($returnurl) {
         $buttons = html_writer::start_tag('div', array('class' => 'edit-tree-element-btn'));
 
@@ -131,13 +157,13 @@ class block_vxg_orgs_renderer extends plugin_renderer_base {
 
             $editbtn = html_writer::link($editurl,
                 html_writer::tag('button', '<span class="icon fa fa-edit"></span>',
-                array('class' => 'btn btn-info', 'disabled' => '',
-                    'data-toggle' => 'tooltip', 'title' => get_string('edit_org_title', 'block_vxg_orgs'))),
+                    array('class' => 'btn btn-info', 'disabled' => '',
+                        'data-toggle' => 'tooltip', 'title'         => get_string('edit_org_title', 'block_vxg_orgs'))),
                 array('style' => 'pointer-events:none;', 'id' => 'vxg_org_edit_btn'));
 
             $deletebtn = html_writer::link($delurl, html_writer::tag('button', '<span class="icon fa fa-trash"></span>',
                 array('class' => 'btn btn-danger', 'disabled' => '',
-                    'data-toggle' => 'tooltip', 'title' => get_string('del_org', 'block_vxg_orgs'))),
+                    'data-toggle' => 'tooltip', 'title'           => get_string('del_org', 'block_vxg_orgs'))),
                 array('style' => 'pointer-events:none;', 'id' => 'vxg_org_del_btn'));
 
             $buttons .= $newbtn;
@@ -150,7 +176,7 @@ class block_vxg_orgs_renderer extends plugin_renderer_base {
                 'returnurl' => $returnurl));
             $addadminbtn = html_writer::link($addadminurl, html_writer::tag('button', '<span class="icon fa fa-user-plus"></span>',
                 array('class' => 'btn btn-secondary', 'style' => 'background-color:#ced4da', 'data-toggle' => 'tooltip',
-                'title' => get_string('org_admins', 'block_vxg_orgs', ''))),
+                    'title'       => get_string('org_admins', 'block_vxg_orgs', ''))),
                 array('style' => 'pointer-events:none;', 'id' => 'vxg_org_addadmin_btn'));
 
             $buttons .= $addadminbtn;

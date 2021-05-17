@@ -14,26 +14,50 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * The orgnaisation block helper functions
+ * @package    block_vxg_orgs
+ * @copyright  Veloxnet
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/completionlib.php');
 
+
+/**
+ * Deletes the specified orgnasiantion and it's children
+ * @param int   $orgid
+ */
 function delete_org_with_children($orgid) {
     global $DB;
 
-    $childs = $DB->get_records('block_vxg_org', ['parentid' => $orgid], 'id');
+    $childs = $DB->get_records('block_vxg_orgs', ['parentid' => $orgid], 'id');
 
     foreach ($childs as $child) {
-        $child->deleted = date("Y/m/d/H/m/s");
+        $child->deleted = time();
         delete_org_with_children($child->id);
-        $DB->update_record('block_vxg_org', $child);
+        $DB->update_record('block_vxg_orgs', $child);
 
     }
 
-    $DB->update_record('block_vxg_org', ['id' => $orgid, 'deleted' => date("Y/m/d/H/m/s")]);
+    $DB->update_record('block_vxg_orgs', ['id' => $orgid, 'deleted' => time()]);
 }
 
 
+/**
+ * File serving.
+ *
+ * @param stdClass $course The course object.
+ * @param stdClass $cm The cm object.
+ * @param context $context The context object.
+ * @param string $filearea The file area.
+ * @param array $args List of arguments.
+ * @param bool $forcedownload Whether or not to force the download of the file.
+ * @param array $options Array of options.
+ * @return void|false
+ */
 function block_vxg_orgs_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
 
     $fs = get_file_storage();

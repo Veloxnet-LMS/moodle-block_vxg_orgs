@@ -14,6 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Page for editing organisation
+ * @package    block_vxg_orgs
+ * @copyright  Veloxnet
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require_once('../../config.php');
 require_once($CFG->dirroot . '/repository/lib.php');
 
@@ -40,7 +47,7 @@ $PAGE->set_title($titlestring);
 $PAGE->set_heading($headingstring);
 $PAGE->navbar->add($headingstring);
 
-$org = $DB->get_record('block_vxg_org', array('id' => $orgid));
+$org = $DB->get_record('block_vxg_orgs', array('id' => $orgid));
 
 $fileoptions = array(
     'maxbytes'       => 0,
@@ -68,31 +75,19 @@ if ($editorgsform->is_cancelled()) {
     $filedata = file_postupdate_standard_filemanager($data, 'files',
         $fileoptions, $context, 'block_vxg_orgs_' . $orgid, 'files', 0);
 
-    if ($data->validfrom == 0) {
-        $validfrom = null;
-    } else {
-        $validfrom = date('Y-m-d', $data->validfrom);
-    }
-
-    if ($data->validto == 0) {
-        $validto = null;
-    } else {
-        $validto = date('Y-m-d', $data->validto);
-    }
-
     $org                = new stdClass();
     $org->id            = $orgid;
     $org->idnumber      = $data->idnumber;
     $org->fullname      = $data->fullname;
     $org->secondaryname = $data->secondaryname;
     $org->description   = $data->description;
-    $org->validfrom     = $validfrom;
-    $org->validto       = $validto;
+    $org->validfrom     = $data->validfrom;
+    $org->validto       = $data->validto;
     $org->orgtype       = $data->orgtype;
     $org->costcenterid  = $data->costcenterid;
-    $org->timemodified  = date("Y/m/d/H/m/s");
+    $org->timemodified  = time();
     $org->usermodified  = $USER->id;
-    $DB->update_record('block_vxg_org', $org);
+    $DB->update_record('block_vxg_orgs', $org);
 
     redirect($returnurl);
 } else {
@@ -105,22 +100,22 @@ if ($editorgsform->is_cancelled()) {
         'fullname'      => $org->fullname,
         'secondaryname' => $org->secondaryname,
         'description'   => $org->description,
-        'validfrom'     => strtotime($org->validfrom),
-        'validto'       => strtotime($org->validto),
+        'validfrom'     => $org->validfrom,
+        'validto'       => $org->validto,
         'orgtype'       => $org->orgtype,
         'costcenterid'  => $org->costcenterid,
 
     ));
 
     $addurl = new moodle_url('/blocks/vxg_orgs/add_org.php', array('returnurl' => $returnurl,
-        'orgid'                                                                    => $org->id));
+        'orgid' => $org->id));
 
     $addbtn = html_writer::link($addurl,
         html_writer::tag('button', get_string('add_org', 'block_vxg_orgs'),
             array('class' => 'btn btn-primary')));
 
     $delurl = new moodle_url('/blocks/vxg_orgs/delete_org.php', array('returnurl' => $returnurl,
-        'orgid'                                                                       => $org->id));
+        'orgid' => $org->id));
 
     $delbtn = html_writer::link($delurl,
         html_writer::tag('button', get_string('del_org', 'block_vxg_orgs'),

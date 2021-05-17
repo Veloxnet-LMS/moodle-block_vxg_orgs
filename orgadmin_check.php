@@ -14,10 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Orgadmin filter
+ * @package    block_vxg_orgs
+ * @copyright  Veloxnet
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/user/filters/checkbox.php');
 
+/**
+ * Filter based on organisation admins.
+ * @package    block_vxg_orgs
+ * @copyright  Veloxnet
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class user_filter_orgadmin_check extends user_filter_checkbox
 {
 
@@ -53,7 +66,7 @@ class user_filter_orgadmin_check extends user_filter_checkbox
         $field  = $this->field;
 
         $sql = "id IN (SELECT userid
-        FROM {block_vxg_org_right} r
+        FROM {block_vxg_orgs_right} r
         WHERE r.objecttype = 'org' AND objectid = $data[orgid])";
 
         return array($sql, array());

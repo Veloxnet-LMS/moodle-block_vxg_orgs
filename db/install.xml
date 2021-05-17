@@ -4,7 +4,7 @@
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="block_vxg_org" COMMENT="vxg_org table retrofitted from MySQL">
+    <TABLE NAME="block_vxg_orgs" COMMENT="block_vxg_orgs table">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="18" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="idnumber" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
@@ -15,21 +15,21 @@
         <FIELD NAME="secondaryname" TYPE="char" LENGTH="1024" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="documentid" TYPE="int" LENGTH="18" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="validfrom" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="validto" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="validfrom" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="validto" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="orgtype" TYPE="char" LENGTH="1024" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="costcenterid" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="timecreated" TYPE="datetime" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="timemodified" TYPE="datetime" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="usermodified" TYPE="int" LENGTH="18" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="deleted" TYPE="datetime" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="deleted" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="sync" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-     <TABLE NAME="block_vxg_org_right" COMMENT="block_vxg_org_right table">
+     <TABLE NAME="block_vxg_orgs_right" COMMENT="block_vxg_orgs_right table">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="18" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="objecttype" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
@@ -38,7 +38,7 @@
         <FIELD NAME="userid" TYPE="int" LENGTH="18" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="children" TYPE="int" LENGTH="9" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="righttype" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="timemodified" TYPE="datetime" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="usermodified" TYPE="int" LENGTH="18" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>

@@ -14,6 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Filter class for the organisation block
+ * @package    block_vxg_orgs
+ * @copyright  Veloxnet
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/user/filters/lib.php');
@@ -21,8 +28,21 @@ require_once(__DIR__ . '/search_boss.php');
 require_once(__DIR__ . '/search_org_job.php');
 require_once(__DIR__ . '/orgadmin_check.php');
 
+/**
+ * Organisation block filtering wrapper class.
+ *
+ * @package    block_vxg_orgs
+ * @copyright  Veloxnet
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class vxg_user_filtering extends user_filtering {
 
+    /**
+     * Creates known filter if present
+     * @param string $fieldname
+     * @param boolean $advanced
+     * @return object filter
+     */
     public function get_field($fieldname, $advanced) {
         global $USER, $CFG, $DB, $SITE;
 

@@ -14,6 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Page for managing organisation admins
+ * @package    block_vxg_orgs
+ * @copyright  Veloxnet
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require_once('../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 require_once($CFG->libdir . '/authlib.php');
@@ -36,7 +43,7 @@ require_login();
 $context = context_system::instance();
 
 require_capability('block/vxg_orgs:manageorgadmins', $context);
-if (!$DB->record_exists('block_vxg_org', array('id' => $orgid))) {
+if (!$DB->record_exists('block_vxg_orgs', array('id' => $orgid))) {
     print_error('orgnotexist', 'block_vxg_orgs');
 }
 
@@ -45,7 +52,7 @@ if (empty($returnurl)) {
 }
 $orgname = '';
 
-$orgname = $DB->get_field('block_vxg_org', 'fullname', array('id' => $orgid));
+$orgname = $DB->get_field('block_vxg_orgs', 'fullname', array('id' => $orgid));
 $head    = get_string('manage_org_admins', 'block_vxg_orgs', $orgname);
 
 $PAGE->set_context($context);
@@ -57,15 +64,15 @@ $PAGE->navbar->add($head);
 
 if ($removeorgadmin && confirm_sesskey()) {
     require_capability('block/vxg_orgs:manageorgadmins', $context);
-    if ($DB->record_exists('block_vxg_org_right',
+    if ($DB->record_exists('block_vxg_orgs_right',
     array('objecttype' => 'org', 'objectid' => $orgid, 'userid' => $removeorgadmin))) {
-        $DB->delete_records('block_vxg_org_right',
+        $DB->delete_records('block_vxg_orgs_right',
         array('objecttype' => 'org', 'objectid' => $orgid, 'userid' => $removeorgadmin));
     }
 } else if ($addorgadmin && confirm_sesskey()) {
     require_capability('block/vxg_orgs:manageorgadmins', $context);
-    if (!$DB->record_exists('block_vxg_org_right', array('objecttype' => 'org', 'objectid' => $orgid, 'userid' => $addorgadmin))) {
-        $DB->insert_record('block_vxg_org_right',
+    if (!$DB->record_exists('block_vxg_orgs_right', array('objecttype' => 'org', 'objectid' => $orgid, 'userid' => $addorgadmin))) {
+        $DB->insert_record('block_vxg_orgs_right',
         (object) array('objecttype' => 'org', 'objectid' => $orgid, 'userid' => $addorgadmin));
     }
 }
@@ -202,7 +209,7 @@ if (!$users) {
         $bosses    = block_vxg_orgs_get_user_boss_names($positions);
 
         $buttons = array();
-        if ($DB->record_exists('block_vxg_org_right', array('objecttype' => 'org', 'objectid' => $orgid, 'userid' => $user->id))) {
+        if ($DB->record_exists('block_vxg_orgs_right', array('objecttype' => 'org', 'objectid' => $orgid, 'userid' => $user->id))) {
             $removeorgadmin = new moodle_url('/blocks/vxg_orgs/manage_admins.php',
                 array('orgid' => $orgid, 'removeorgadmin' => $user->id, 'returnurl' => $returnurl, 'sesskey' => sesskey()));
             $buttons[] = html_writer::link($removeorgadmin, $OUTPUT->pix_icon('t/removecontact',

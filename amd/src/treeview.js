@@ -14,21 +14,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 
-define(['jquery', 'core/tree'], function($, Tree) {
+define(['jquery', 'core/tree'], function ($, Tree) {
     return {
-        init: function(instanceid) {
+        init: function (instanceid) {
             var navTree = new Tree("#orgs_tree");
-            navTree.finishExpandingGroup = function(item) {
+            navTree.finishExpandingGroup = function (item) {
                 Tree.prototype.finishExpandingGroup.call(this, item);
-                Y.use('moodle-core-event', function() {
+                Y.use('moodle-core-event', function () {
                     Y.Global.fire(M.core.globalEvents.BLOCK_CONTENT_UPDATED, {
                         instanceid: instanceid
                     });
                 });
             };
-            navTree.collapseGroup = function(item) {
+            navTree.collapseGroup = function (item) {
                 Tree.prototype.collapseGroup.call(this, item);
-                Y.use('moodle-core-event', function() {
+                Y.use('moodle-core-event', function () {
                     Y.Global.fire(M.core.globalEvents.BLOCK_CONTENT_UPDATED, {
                         instanceid: instanceid
                     });

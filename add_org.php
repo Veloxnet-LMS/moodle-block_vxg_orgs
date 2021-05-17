@@ -14,6 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Page for adding new organisation
+ * @package    block_vxg_orgs
+ * @copyright  Veloxnet
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require_once('../../config.php');
 require_once($CFG->dirroot . '/repository/lib.php');
 
@@ -60,67 +67,55 @@ if ($editorgsform->is_cancelled()) {
     redirect($returnurl);
 } else if ($data = $editorgsform->get_data()) {
 
-    if ($data->validfrom == 0) {
-        $validfrom = null;
-    } else {
-        $validfrom = date('Y-m-d', $data->validfrom);
-    }
-
-    if ($data->validto == 0) {
-        $validto = null;
-    } else {
-        $validto = date('Y-m-d', $data->validto);
-    }
-
     if ($orgid != 0) {
 
-        $parentorg = $DB->get_record('block_vxg_org', array('id' => $orgid), 'id, level, path');
+        $parentorg = $DB->get_record('block_vxg_orgs', array('id' => $orgid), 'id, level, path');
 
         $org = new stdClass();
         $org->idnumber = $data->idnumber;
         $org->fullname = $data->fullname;
         $org->secondaryname = $data->secondaryname;
         $org->description = $data->description;
-        $org->validfrom = $validfrom;
-        $org->validto = $validto;
+        $org->validfrom = $data->validfrom;
+        $org->validto = $data->validto;
         $org->orgtype = $data->orgtype;
         $org->costcenterid = $data->costcenterid;
 
         $org->parentid = $parentorg->id;
         $org->level = $parentorg->level + 1;
         $org->usermodified = $USER->id;
-        $org->timecreated = date("Y/m/d/H/m/s");
+        $org->timecreated = time();
 
-        $insertedid = $DB->insert_record('block_vxg_org', $org);
+        $insertedid = $DB->insert_record('block_vxg_orgs', $org);
 
         $updateorg = new stdClass();
         $updateorg->id = $insertedid;
         $updateorg->path = $parentorg->path .'/' . $insertedid;
 
-        $DB->update_record('block_vxg_org', $updateorg);
+        $DB->update_record('block_vxg_orgs', $updateorg);
     } else {
         $org = new stdClass();
         $org->idnumber = $data->idnumber;
         $org->fullname = $data->fullname;
         $org->secondaryname = $data->secondaryname;
         $org->description = $data->description;
-        $org->validfrom = $validfrom;
-        $org->validto = $validto;
+        $org->validfrom = $data->validfrom;
+        $org->validto = $data->validto;
         $org->orgtype = $data->orgtype;
         $org->costcenterid = $data->costcenterid;
 
         $org->parentid = 0;
         $org->level = 1;
         $org->usermodified = $USER->id;
-        $org->timecreated = date("Y/m/d/h/m/s");
+        $org->timecreated = time();
 
-        $insertedid = $DB->insert_record('block_vxg_org', $org);
+        $insertedid = $DB->insert_record('block_vxg_orgs', $org);
 
         $updateorg = new stdClass();
         $updateorg->id = $insertedid;
         $updateorg->path = '/' . $insertedid;
 
-        $DB->update_record('block_vxg_org', $updateorg);
+        $DB->update_record('block_vxg_orgs', $updateorg);
     }
     $filedata = file_postupdate_standard_filemanager($data, 'files',
             $fileoptions, $context, 'block_vxg_orgs_'. $insertedid, 'files', 0);

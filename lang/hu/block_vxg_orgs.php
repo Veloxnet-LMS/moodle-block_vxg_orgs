@@ -14,6 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Strings for component 'block_vxg_orgs', language 'hu'.
+ * @package    block_vxg_orgs
+ * @copyright  Veloxnet
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 $string['vxg_orgs:addinstance'] = 'VXG Szervezeti blokk hozzáadása';
 $string['vxg_orgs:myaddinstance'] = 'VXG Szervezeti blokk hozzáadása az LMS-hez';
 $string['vxg_orgs:caneditorgs'] = 'Szervezetek módosítása';

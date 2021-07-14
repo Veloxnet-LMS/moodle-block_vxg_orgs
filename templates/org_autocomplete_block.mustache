@@ -15,14 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    Classes required for JS:
-    * none
+    @template block_vxg_orgs/org_autocomplate_block
 
-    Data attributes required for JS:
-    * none
-
-    Context variables required for this template:
-    *
+    Adds the org autocomplate to the block.
 
     Example context (json):
     {}
@@ -33,8 +28,10 @@
 {{#js}}
 require(["jquery", "core/form-autocomplete", "core/str"], function($, Autocomplate, Str) {
     var searchstr = '';
-    Str.get_string("search").then(function(result) {searchstr = result}).then(function(){
-                Autocomplate.enhance('#vxg_org_auto_block', false, 'block_vxg_orgs/auto_orgs', searchstr, true, true, ' ', true);
+    Str.get_string("search").then(function(result) {
+        searchstr = result;
+    }).then(function() {
+        Autocomplate.enhance('#vxg_org_auto_block', false, 'block_vxg_orgs/auto_orgs', searchstr, true, true, ' ', true);
     });
 });
 {{/js}}

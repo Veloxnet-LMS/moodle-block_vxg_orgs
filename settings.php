@@ -28,6 +28,6 @@ require_once(__DIR__ . '/locallib.php');
 $roles = block_vxg_orgs_get_assignable_roles();
 
 if ($ADMIN->fulltree) {
-    $settings->add(new admin_setting_configmulticheckbox('block_vxg_orgs_canadd', get_string('canaddroles', 'block_vxg_orgs'),
+    $settings->add(new admin_setting_configmulticheckbox('block_vxg_orgs/canadd', get_string('canaddroles', 'block_vxg_orgs'),
     get_string('canadd', 'block_vxg_orgs'), array('manager' => 'manager'), $roles));
 }

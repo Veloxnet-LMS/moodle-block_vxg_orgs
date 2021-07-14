@@ -25,26 +25,24 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/completionlib.php');
 
-
 /**
  * Deletes the specified orgnasiantion and it's children
  * @param int   $orgid
  */
-function delete_org_with_children($orgid) {
+function block_vxg_orgs_delete_org_with_children($orgid) {
     global $DB;
 
     $childs = $DB->get_records('block_vxg_orgs', ['parentid' => $orgid], 'id');
 
     foreach ($childs as $child) {
         $child->deleted = time();
-        delete_org_with_children($child->id);
+        block_vxg_orgs_delete_org_with_children($child->id);
         $DB->update_record('block_vxg_orgs', $child);
 
     }
 
     $DB->update_record('block_vxg_orgs', ['id' => $orgid, 'deleted' => time()]);
 }
-
 
 /**
  * File serving.

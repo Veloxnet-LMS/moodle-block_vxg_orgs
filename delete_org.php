@@ -61,7 +61,7 @@ $deleteorgsform->set_data($toform);
 if ($deleteorgsform->is_cancelled()) {
     redirect($returnurl);
 } else if ($data = $deleteorgsform->get_data()) {
-    delete_org_with_children($orgid);
+    block_vxg_orgs_delete_org_with_children($orgid);
     redirect($returnurl);
 } else {
     $site = get_site();

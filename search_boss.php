@@ -31,7 +31,7 @@ require_once($CFG->dirroot . '/user/filters/lib.php');
  * @copyright  Veloxnet
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class user_filter_search_boss extends user_filter_type {
+class block_vxg_orgs_search_boss extends user_filter_type {
 
     /**
      * Returns an array of comparison operators
@@ -93,14 +93,14 @@ class user_filter_search_boss extends user_filter_type {
             }
 
             // If no positon found means no user has this position assign either.
-            $wherelist = implode(" $operator up.posid = ", $posids);
+            $wherelist = implode(" {$operator} up.posid = ", $posids);
         } else {
             $wherelist = 0;
         }
 
         $sql = "id IN (SELECT userid
         FROM {vxg_user_pos} up
-        WHERE up.posid = $wherelist)";
+        WHERE up.posid = {$wherelist})";
 
         return array($sql, array());
     }

@@ -35,7 +35,7 @@ require_once(__DIR__ . '/orgadmin_check.php');
  * @copyright  Veloxnet
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class vxg_user_filtering extends user_filtering {
+class block_vxg_orgs_filtering extends user_filtering {
 
     /**
      * Creates known filter if present
@@ -73,27 +73,27 @@ class vxg_user_filtering extends user_filtering {
                 return new user_filter_text('idnumber', get_string('idnumber'), $advanced, 'idnumber');
             case 'org':
                 if ($DB->get_manager()->table_exists('vxg_user_pos')) {
-                    return new user_filter_search_org_job('org', get_string('org', 'block_vxg_orgs'), $advanced, 'org');
+                    return new block_vxg_orgs_search_org_job('org', get_string('org', 'block_vxg_orgs'), $advanced, 'org');
                 } else {
                     return null;
                 }
             case 'job':
                 if ($DB->get_manager()->table_exists('vxg_user_pos')) {
-                    return new user_filter_search_org_job('job', get_string('job', 'block_vxg_orgs'), $advanced, 'job');
+                    return new block_vxg_orgs_search_org_job('job', get_string('job', 'block_vxg_orgs'), $advanced, 'job');
                 } else {
                     return null;
                 }
             case 'boss':
                 if ($DB->get_manager()->table_exists('vxg_user_pos')) {
-                    return new user_filter_search_boss('boss', get_string('boss', 'block_vxg_orgs'), $advanced, 'boss');
+                    return new block_vxg_orgs_search_boss('boss', get_string('boss', 'block_vxg_orgs'), $advanced, 'boss');
                 } else {
                     return null;
                 }
             case 'orgadmin':
-                return new user_filter_orgadmin_check('boss', get_string('onlyorgadmin', 'block_vxg_orgs'), $advanced, 'orgadmin');
+                return new block_vxg_orgs_orgadmin_check('boss', get_string('onlyorgadmin', 'block_vxg_orgs'),
+                                                        $advanced, 'orgadmin');
             default:
                 return null;
         }
     }
-
 }

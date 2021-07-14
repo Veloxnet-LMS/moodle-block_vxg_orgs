@@ -27,7 +27,7 @@ require_once($CFG->libdir . '/authlib.php');
 require_once($CFG->dirroot . '/user/filters/lib.php');
 require_once($CFG->dirroot . '/user/lib.php');
 require_once(__DIR__ . '/locallib.php');
-require_once(__DIR__ . '/vxg_user_filtering.php');
+require_once(__DIR__ . '/block_vxg_orgs_filtering.php');
 
 $orgid          = optional_param('orgid', 0, PARAM_INT);
 $returnurl      = optional_param('returnurl', '', PARAM_LOCALURL);
@@ -44,7 +44,7 @@ $context = context_system::instance();
 
 require_capability('block/vxg_orgs:manageorgadmins', $context);
 if (!$DB->record_exists('block_vxg_orgs', array('id' => $orgid))) {
-    print_error('orgnotexist', 'block_vxg_orgs');
+    throw new moodle_exception('orgnotexist', 'block_vxg_orgs');
 }
 
 if (empty($returnurl)) {
@@ -72,8 +72,12 @@ if ($removeorgadmin && confirm_sesskey()) {
 } else if ($addorgadmin && confirm_sesskey()) {
     require_capability('block/vxg_orgs:manageorgadmins', $context);
     if (!$DB->record_exists('block_vxg_orgs_right', array('objecttype' => 'org', 'objectid' => $orgid, 'userid' => $addorgadmin))) {
-        $DB->insert_record('block_vxg_orgs_right',
-        (object) array('objecttype' => 'org', 'objectid' => $orgid, 'userid' => $addorgadmin));
+        $insert = (object) array('objecttype' => 'org',
+        'objectid' => $orgid,
+        'userid' => $addorgadmin,
+        'timemodified' => time(),
+        'usermodified' => $USER->id);
+        $DB->insert_record('block_vxg_orgs_right', $insert);
     }
 }
 
@@ -83,7 +87,7 @@ $fieldnames = array('realname' => 0, 'orgadmin'    => 0, 'org'        => 1, 'job
     'timemodified'                 => 1);
 
 // Create the user filter form.
-$ufiltering = new vxg_user_filtering($fieldnames,
+$ufiltering = new block_vxg_orgs_filtering($fieldnames,
 "manage_admins.php?orgid=$orgid&amp;sort=$sort&amp;dir=$dir&amp;returnurl=$returnurl", array('orgid' => $orgid));
 
 echo $OUTPUT->header();

@@ -31,7 +31,7 @@ require_once($CFG->dirroot . '/user/filters/checkbox.php');
  * @copyright  Veloxnet
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class user_filter_orgadmin_check extends user_filter_checkbox
+class block_vxg_orgs_orgadmin_check extends user_filter_checkbox
 {
 
     /**
@@ -67,7 +67,7 @@ class user_filter_orgadmin_check extends user_filter_checkbox
 
         $sql = "id IN (SELECT userid
         FROM {block_vxg_orgs_right} r
-        WHERE r.objecttype = 'org' AND objectid = $data[orgid])";
+        WHERE r.objecttype = 'org' AND objectid = {$data['orgid']})";
 
         return array($sql, array());
     }

@@ -32,17 +32,19 @@ function block_vxg_orgs_get_assignable_roles() {
     global $DB;
 
     $roleids = $DB->get_fieldset_select('role_context_levels', 'roleid',
-        'contextlevel = ? OR contextlevel = ? OR contextlevel = ?', array('10', '40', '50'));
+        'contextlevel = ? OR contextlevel = ? OR contextlevel = ?', array(CONTEXT_SYSTEM,
+            CONTEXT_COURSECAT,
+            CONTEXT_COURSE));
 
-    $insql = 'IN (' . implode(',', $roleids) . ')';
+    list($insql, $inparams) = $DB->get_in_or_equal($roleids, SQL_PARAMS_NAMED);
 
-    $sql = 'SELECT shortname FROM {role} WHERE id ' . $insql . ' ORDER BY id';
+    $sql = "SELECT shortname FROM {role} WHERE id {$insql} ORDER BY id";
 
-    $rolenames = $DB->get_fieldset_sql($sql);
+    $rolenames = $DB->get_fieldset_sql($sql, $inparams);
 
-    $rolenames = array_combine(array_values($rolenames), array_values($rolenames));
+    $rolenamesout = array_combine(array_values($rolenames), array_values($rolenames));
 
-    return $rolenames;
+    return $rolenamesout;
 
 }
 
@@ -79,7 +81,7 @@ function block_vxg_orgs_get_user_pos_list($userid) {
     if (!$DB->get_manager()->table_exists('vxg_user_pos')) {
         return array();
     }
-    $sql       = "SELECT up.id, p.orgid, p.jobid, p.parentid, up.validfrom, up.validto FROM
+    $sql = "SELECT up.id, p.orgid, p.jobid, p.parentid, up.validfrom, up.validto FROM
     {vxg_user_pos} up LEFT JOIN {vxg_pos} p ON up.posid = p.id WHERE up.userid = :userid";
     $positions = $DB->get_records_sql($sql, array('userid' => $userid));
 

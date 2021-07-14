@@ -38,8 +38,6 @@ class delete_orgs_form extends \moodleform {
      * Define the form.
      */
     public function definition() {
-        global $CFG;
-
         $mform = $this->_form;
 
         $orgdata   = $this->_customdata['orgdata'];

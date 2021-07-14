@@ -54,7 +54,7 @@ class block_vxg_orgs_external extends external_api {
         global $DB;
         $likesql = $DB->sql_like('fullname', ':search', false);
         $params['search'] = "%$query%";
-        $where = '(deleted = 0 OR deleted IS null) AND ' . $likesql;
+        $where = "(deleted = 0 OR deleted IS null) AND {$likesql}";
 
         $orgs = $DB->get_records_select('block_vxg_orgs', $where, $params, 'fullname', 'id, fullname');
         $orgsoptions = [];

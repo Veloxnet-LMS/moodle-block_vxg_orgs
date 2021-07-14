@@ -31,7 +31,7 @@ require_once($CFG->dirroot . '/user/filters/lib.php');
  * @copyright  Veloxnet
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class user_filter_search_org_job extends user_filter_type {
+class block_vxg_orgs_search_org_job extends user_filter_type {
 
     /**
      * Returns an array of comparison operators
@@ -79,7 +79,8 @@ class user_filter_search_org_job extends user_filter_type {
         }
 
         $values    = $data['value'];
-        $positions = $DB->get_records_list('vxg_pos', $this->_name . 'id', $values);
+        $name = $this->_name . 'id';
+        $positions = $DB->get_records_list('vxg_pos', $name, $values);
 
         if (!empty($positions)) {
             $posids = array();
@@ -94,7 +95,7 @@ class user_filter_search_org_job extends user_filter_type {
 
         $sql = "id IN (SELECT userid
         FROM {vxg_user_pos} up
-        WHERE up.posid = $wherelist)";
+        WHERE up.posid = {$wherelist})";
 
         return array($sql, array());
     }
@@ -133,10 +134,11 @@ class user_filter_search_org_job extends user_filter_type {
             return '';
         }
 
+        $name = 'vxg_' . $this->_name;
         if (is_array($values)) {
-            $items = $DB->get_records_list('vxg_' . $this->_name, 'id', $values, '', 'id, fullname');
+            $items = $DB->get_records_list($name, 'id', $values, '', 'id, fullname');
         } else {
-            $items = $DB->get_field('vxg_' . $this->_name, 'fullname', array('id' => $values));
+            $items = $DB->get_field($name, 'fullname', array('id' => $values));
         }
 
         $a        = new stdClass();

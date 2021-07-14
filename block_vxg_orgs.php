@@ -58,11 +58,13 @@ class block_vxg_orgs extends block_base {
             return true;
         }
 
-        if (!empty($CFG->block_vxg_orgs_canadd)) {
+        $config = get_config('block_vxg_orgs');
+
+        if (!empty($config->canadd)) {
             $userroles = block_vxg_orgs_get_user_role_names();
 
             $canadd = false;
-            $canaddroles = $CFG->block_vxg_orgs_canadd;
+            $canaddroles = $config->canadd;
             foreach ($userroles as $userrole) {
                 if (in_array($userrole, explode(',', $canaddroles))) {
                     return true;
@@ -126,10 +128,14 @@ class block_vxg_orgs extends block_base {
      * @return stdClass contents of block
      */
     public function get_content() {
-        global $DB, $COURSE;
+        global $DB;
 
         if ($this->contentgenerated === true) {
             return true;
+        }
+
+        if ($this->content !== null) {
+            return $this->content;
         }
 
         $blockid  = $this->instance->id;

@@ -97,29 +97,6 @@
     outline: none;
 }
 
-/*  Forms */
-.disabled-input {
-    border: none;
-    background-color: transparent;
-    cursor: default;
-}
-
-.block_vxg_orgs div#fitem_id_orgs div input {
-    padding: 6px;
-}
-
-.block_vxg_orgs div#fitem_id_orgs div:nth-child(1) {
-    display: none;
-}
-
-.block_vxg_orgs .form-group div input {
-    padding: 6px;
-}
-
-.block_vxg_orgs .form-group div:nth-child(1) {
-    display: none;
-}
-
 .block_vxg_orgs .vxg_search_orgs {
     display: none;
 }

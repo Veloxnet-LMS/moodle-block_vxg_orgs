@@ -42,7 +42,7 @@ define(["jquery"], function($) {
             var adminUrl = orgadminNewUrlStart + "&orgid=0";
             orgadminNewa.attr("href", adminUrl);
 
-            var orgId = "";
+            var orgId = 0;
             org.click(function() {
                 orgId = $(this).attr("data-orgid");
                 makeAddOrgadminUrl(orgId, orgadminNewa, orgadminNewUrlStart);
@@ -54,7 +54,6 @@ define(["jquery"], function($) {
             var newUrl = orgNewUrlStart + "&orgid=0";
             orgNewa.attr("href", newUrl);
 
-            var orgId = "";
             org.click(function() {
                 orgId = $(this).attr("data-orgid");
                 makeAddOrgUrl(orgId, orgNewa, orgNewUrlStart);
@@ -64,7 +63,6 @@ define(["jquery"], function($) {
 
             var orgEditUrlStart = orgedita.attr("href");
 
-            var orgId = "";
             org.click(function() {
                 orgId = $(this).attr("data-orgid");
                 makeEditOrgUrl(orgId, orgedita, orgEditUrlStart);
@@ -73,7 +71,6 @@ define(["jquery"], function($) {
             var orgdela = $("#vxg_org_del_btn");
             var orgDelUrlStart = orgdela.attr("href");
 
-            var orgId = "";
             org.click(function() {
                 orgId = $(this).attr("data-orgid");
                 makeDeleteOrgUrl(orgId, orgdela, orgDelUrlStart);
@@ -99,10 +96,16 @@ define(["jquery"], function($) {
         }
     };
 
+    /**
+     * Controls the url for the delete button.
+     * @param {int} orgId
+     * @param {object} orgdela
+     * @param {String} orgDelUrlStart
+     */
     function makeDeleteOrgUrl(orgId, orgdela, orgDelUrlStart) {
         if (orgId != 0) {
-            var del_url = orgDelUrlStart + "&orgid=" + orgId;
-            orgdela.attr("href", del_url);
+            var delUrl = orgDelUrlStart + "&orgid=" + orgId;
+            orgdela.attr("href", delUrl);
             orgdela.children().removeAttr("disabled");
             orgdela.children().css("pointer-events", "initial");
         } else {
@@ -115,12 +118,12 @@ define(["jquery"], function($) {
      * Controls the url for the edit button.
      * @param {int} orgId
      * @param {object} orgedita
-     * @return {String} orgEditUrlStart
+     * @param {String} orgEditUrlStart
      */
     function makeEditOrgUrl(orgId, orgedita, orgEditUrlStart) {
         if (orgId != 0) {
-            var edit_url = orgEditUrlStart + "&orgid=" + orgId;
-            orgedita.attr("href", edit_url);
+            var editUrl = orgEditUrlStart + "&orgid=" + orgId;
+            orgedita.attr("href", editUrl);
             orgedita.children().removeAttr("disabled");
             orgedita.children().css("pointer-events", "initial");
         } else {
@@ -133,7 +136,7 @@ define(["jquery"], function($) {
      * Controls the url for the new button.
      * @param {int} orgId
      * @param {object} orgNewa
-     * @return {String} orgNewUrlStart
+     * @param {String} orgNewUrlStart
      */
     function makeAddOrgUrl(orgId, orgNewa, orgNewUrlStart) {
         var newUrl = orgNewUrlStart + "&orgid=" + orgId;
@@ -143,10 +146,10 @@ define(["jquery"], function($) {
     }
 
     /**
-     * Controls the url for the new button.
+     * Controls the url for the orgadmin button.
      * @param {int} orgId
      * @param {object} orgadminNewa
-     * @return {String} orgadminNewUrlStart
+     * @param {String} orgadminNewUrlStart
      */
     function makeAddOrgadminUrl(orgId, orgadminNewa, orgadminNewUrlStart) {
         if (orgId != 0) {

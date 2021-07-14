@@ -30,8 +30,9 @@ require(["jquery", "core/form-autocomplete", "core/str"], function($, Autocompla
     var searchstr = '';
     Str.get_string("search").then(function(result) {
         searchstr = result;
+        return true;
     }).then(function() {
-        Autocomplate.enhance('#vxg_org_auto_block', false, 'block_vxg_orgs/auto_orgs', searchstr, true, true, ' ', true);
+        return Autocomplate.enhance('#vxg_org_auto_block', false, 'block_vxg_orgs/auto_orgs', searchstr, true, true, ' ', true);
     });
 });
 {{/js}}
